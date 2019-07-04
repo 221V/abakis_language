@@ -1,0 +1,156 @@
+; DISASSEMBLY OF TEST.ASM/BIN
+
+0000   A9 00      LDA #$00
+0002   F0 13      BEQ $0017
+0004   A9 44      LDA #$44
+0006   A5 AA      LDA $AA
+0008   B5 7F      LDA $7F,X
+000A   AD FF 4F   LDA $4FFF
+000D   BD BB 88   LDA $88BB,X
+0010   B9 EE 24   LDA $24EE,Y
+0013   A1 AC      LDA ($AC,X)
+0015   B1 DC      LDA ($DC),Y
+0017   A2 44      LDX #$44
+0019   A6 80      LDX $80
+001B   B6 80      LDX $80,Y
+001D   AE AA AA   LDX $AAAA
+0020   BE AA AA   LDX $AAAA,Y
+0023   A0 44      LDY #$44
+0025   A4 80      LDY $80
+0027   B4 80      LDY $80,X
+0029   AC AA AA   LDY $AAAA
+002C   85 AA      STA $AA
+002E   95 7F      STA $7F,X
+0030   8D FF 4F   STA $4FFF
+0033   9D BB 88   STA $88BB,X
+0036   99 EE 24   STA $24EE,Y
+0039   81 AC      STA ($AC,X)
+003B   91 DC      STA ($DC),Y
+003D   D0 E7      BNE $0026
+003F   86 80      STX $80
+0041   96 80      STX $80,Y
+0043   8E AA AA   STX $AAAA
+0046   84 80      STY $80
+0048   94 80      STY $80,X
+004A   8C AA AA   STY $AAAA
+004D   E6 80      INC $80
+004F   F6 80      INC $80,X
+0051   EE 00 A0   INC $A000
+0054   FE 00 80   INC $8000,X
+0057   C6 80      DEC $80
+0059   D6 80      DEC $80,X
+005B   CE 00 A0   DEC $A000
+005E   DE 00 80   DEC $8000,X
+0061   69 44      ADC #$44
+0063   65 AA      ADC $AA
+0065   75 7F      ADC $7F,X
+0067   6D FF 4F   ADC $4FFF
+006A   7D BB 88   ADC $88BB,X
+006D   79 EE 24   ADC $24EE,Y
+0070   61 AC      ADC ($AC,X)
+0072   71 DC      ADC ($DC),Y
+0074   E9 44      SBC #$44
+0076   E5 AA      SBC $AA
+0078   F5 7F      SBC $7F,X
+007A   ED FF 4F   SBC $4FFF
+007D   FD BB 88   SBC $88BB,X
+0080   F9 EE 24   SBC $24EE,Y
+0083   E1 AC      SBC ($AC,X)
+0085   F1 DC      SBC ($DC),Y
+0087   C9 44      CMP #$44
+0089   C5 AA      CMP $AA
+008B   D5 7F      CMP $7F,X
+008D   CD FF 4F   CMP $4FFF
+0090   DD BB 88   CMP $88BB,X
+0093   D9 EE 24   CMP $24EE,Y
+0096   C1 AC      CMP ($AC,X)
+0098   D1 DC      CMP ($DC),Y
+009A   E0 88      CPX #$88
+009C   E4 BB      CPX $BB
+009E   EC CC 3C   CPX $3CCC
+00A1   C0 88      CPY #$88
+00A3   C4 BB      CPY $BB
+00A5   CC CC 3C   CPY $3CCC
+00A8   29 44      AND #$44
+00AA   25 AA      AND $AA
+00AC   35 7F      AND $7F,X
+00AE   2D FF 4F   AND $4FFF
+00B1   3D BB 88   AND $88BB,X
+00B4   39 EE 24   AND $24EE,Y
+00B7   21 AC      AND ($AC,X)
+00B9   31 DC      AND ($DC),Y
+00BB   09 44      ORA #$44
+00BD   05 AA      ORA $AA
+00BF   15 7F      ORA $7F,X
+00C1   0D FF 4F   ORA $4FFF
+00C4   1D BB 88   ORA $88BB,X
+00C7   19 EE 24   ORA $24EE,Y
+00CA   01 AC      ORA ($AC,X)
+00CC   11 DC      ORA ($DC),Y
+00CE   49 44      EOR #$44
+00D0   45 AA      EOR $AA
+00D2   55 7F      EOR $7F,X
+00D4   4D FF 4F   EOR $4FFF
+00D7   5D BB 88   EOR $88BB,X
+00DA   59 EE 24   EOR $24EE,Y
+00DD   41 AC      EOR ($AC,X)
+00DF   51 DC      EOR ($DC),Y
+00E1   0A         ASL A
+00E2   0A         ASL A
+00E3   06 80      ASL $80
+00E5   16 80      ASL $80,X
+00E7   0E 00 A0   ASL $A000
+00EA   1E 00 80   ASL $8000,X
+00ED   4A         LSR A
+00EE   4A         LSR A
+00EF   46 80      LSR $80
+00F1   56 80      LSR $80,X
+00F3   4E 00 A0   LSR $A000
+00F6   5E 00 80   LSR $8000,X
+00F9   2A         ROL A
+00FA   2A         ROL A
+00FB   26 80      ROL $80
+00FD   36 80      ROL $80,X
+00FF   2E 00 A0   ROL $A000
+0102   3E 00 80   ROL $8000,X
+0105   6A         ROR A
+0106   6A         ROR A
+0107   66 80      ROR $80
+0109   76 80      ROR $80,X
+010B   6E 00 A0   ROR $A000
+010E   7E 00 80   ROR $8000,X
+0111   24 50      BIT $50
+0113   2C 00 40   BIT $4000
+0116   F0 0E      BEQ $0126
+0118   D0 0C      BNE $0126
+011A   90 0A      BCC $0126
+011C   B0 08      BCS $0126
+011E   50 06      BVC $0126
+0120   70 04      BVS $0126
+0122   30 02      BMI $0126
+0124   10 00      BPL $0126
+0126   00         BRK
+0127   18         CLC
+0128   D8         CLD
+0129   58         CLI
+012A   B8         CLV
+012B   CA         DEX
+012C   88         DEY
+012D   E8         INX
+012E   C8         INY
+012F   EA         NOP
+0130   48         PHA
+0131   08         PHP
+0132   68         PLA
+0133   28         PLP
+0134   40         RTI
+0135   60         RTS
+0136   38         SEC
+0137   F8         SED
+0138   78         SEI
+0139   AA         TAX
+013A   A8         TAY
+013B   BA         TSX
+013C   8A         TXA
+013D   9A         TXS
+013E   98         TYA

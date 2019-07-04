@@ -1,0 +1,292 @@
+ABAKIS AI, 1-15
+
+Abakis Macro Language+Library For Flat Assembler
+
+ABAKIS.EXE=FASMW
+ABAKISA.EXE=FASMWARM
+
+See BINARY/ASSEMBLER/LICENSE.TXT
+
+(C) 2014-2015, m3ntal. Always in development.
+
+EXCERPTS
+
+; draw bit/byte
+
+function draw.bit, n, x, y
+  if n
+    draw.image bit1.i, x, y
+  else
+    draw.image bit0.i, x, y
+  end
+endf
+
+function draw.byte, n, x, y
+  locals i
+  . i=8
+  loop i, r0=n, r1=i
+    . r1--, r0>>cl, r0&1
+    draw.bit r0, x, y
+    . x+BIT.W
+  endl
+endf
+
+; draw pixel
+
+function draw.pixel, x, y, c
+  alias p=r0, z=r1
+  try clip.pixel x, y
+  vga.xy x, y
+  . z=c, (u32) *p=z
+endf 1
+
+; draw horizontal line
+
+function draw.line.h, x, y, n, c
+  alias p=r0, z=r1, w=r2
+  . p=&x, z=&y, w=&n
+  try clip.line 0, p, z, w
+  vga.xy x, y
+  . z=c
+  loop n, (u32) *p++=z, endl
+endf 1
+
+; draw solid rectangle
+
+function draw.box, x, y, w, h, c
+  locals i
+  try visible x, y, w, h
+  . i=y, i--
+  loop h, i++
+    draw.line.h x, i, w, c
+  endl
+endf 1
+
+; draw scanline
+
+function draw.scanline, pixels, x, y, w
+  alias p=r0, s=r1
+  vga.xy x, y
+  . s=pixels
+  loop w, (u32) *p++=*s++, endl
+endf 1
+
+; draw 8BPP scanline/bitmap with palette
+
+function draw.scanline.8, pixels, x, y, w
+  alias p=r0, s=r1, c=r2, q=r3
+  vga.xy x, y
+  . s=pixels
+  loop w, q=*s++, q*4, q+palette.p
+    . (u32) c=*q, (u32) *p++=c
+  endl
+endf 1
+
+function draw.bitmap.8, pixels, x, y, w, h
+  locals i, p
+  try visible x, y, w, h
+  . i=y, i--, p=pixels
+  loop h, i++
+    draw.scanline.8 p, x, i, w
+    . r0=w, p+r0
+  endl
+endf 1
+
+function draw.my.numbers
+  locals i, n, y
+  . i=bits.h, y=404
+  loop i, r0=my.numbers, r0+i, r0--
+    . r0=*r0, n=r0
+    draw.byte n, 4, y
+    . y-BIT.H
+  endl
+endf
+
+function draw.title.scene
+  draw.text help.t, 16, 130
+  draw.byte magic.n, 50, 300
+endf
+
+function draw.play.scene
+  draw.board
+  draw.my.numbers
+endf
+
+function draw.pause.scene
+  draw.text pause.t, 16, 130
+  draw.byte magic.n, 50, 300
+endf
+
+function draw.game.over
+  print t, game.over.t, score
+  draw.text t, 44, 170
+  draw.byte magic.n, 50, 300
+endf
+
+; convert 32BIT binary number to text
+
+function b2t, n, t
+  alias p=r0, x=r1
+  . p=t
+  if n=0, *p++='0', *p=0
+    return
+  end
+  while n, x=n, x&1, x+'0'
+    . *p++=x, n>>>1
+  endw, *p=0
+  text.reverse t
+endf
+
+; text.copy a, b - standard copy with
+; 0 after. return advanced address
+
+function text.copy, a, b
+  alias p=r0, s=r1, c=r2
+  . p=a, s=b, c=1
+  while c, c=*s++, *p++=c, endw, p--
+endf
+
+; text.copy.n a, b, n - copy with maximum
+; size specified. return &
+
+function text.copy.n, a, b, n
+  alias p=r0, s=r1, c=r2
+  . p=a, s=b
+  loop n, c=*s++, *p++=c
+    if c=0, break, end
+  endl, p--
+endf
+
+; text.go t, n - advance to line #
+
+function text.go, t, n
+  loop n
+    try t=text.find t, 0Dh
+    . t+2
+  endl
+endf t
+
+; text.skip.0 a - skip 0s, return address or 0
+
+function text.skip.0, a
+  alias p=r0, c=r1
+  . p=a, c='0'
+  while c='0', c=*p++, endw, p--
+  if c=0, return 0, end
+endf
+
+; convert text to 32BIT binary
+
+function t2b, t
+  alias p=r0, c=r1, n=r2
+  try text.skip.0 t
+  . n=0
+  loop, c=*p++
+    if c=0, return n, end
+    . n<<1, n-'0', n+c
+  endl
+endf
+
+function draw.my.text, t, x, y
+  locals p, n
+  get n=text.n t
+  . p=t
+  loop n, r0=p, r0=*r0
+    draw.my.c r0, x, y, WHITE
+    . x+r0, x+4, p++
+  endl
+endf
+
+function randomize.puzzle
+  locals q, n
+  alias p=r0, x=r1
+  . q=puzzle, n=(MAP.W*MAP.H)
+  loop n
+    get x=get.random
+    . p=q, (u32) *p=x, q+4
+  endl
+endf
+
+function is.solved
+  locals n
+  alias p=r0, x=r1
+  . p=puzzle, n=(MAP.W*MAP.H)
+  loop n, (u32) x=*p++
+    if x<>NORMAL, return 0, end
+  endl
+endf 1
+
+function draw.puzzle
+  locals x, y
+  . y=0
+  while y<8, x=0
+    while x<8
+      . r0=x, r0*TILE.W, r0+MAP.X
+      . r1=y, r1*TILE.H, r1+MAP.Y
+      draw.piece x, y, r0, r1
+      . x++
+    endw
+    . y++
+  endw
+endf
+
+function on.key
+  if key.event='c'
+    if scene=SCENE.TITLE
+      . scene=SCENE.PLAY
+      go .draw
+    end
+    if scene=SCENE.GAME.OVER
+      go .reset
+    end
+    if key='r'
+      .reset:
+      reset.game
+      go .draw
+    end
+    if key='p'
+      .pause:
+      if scene=SCENE.PLAY
+	. scene=SCENE.PAUSE
+      else.if scene=SCENE.PAUSE
+	. scene=SCENE.PLAY
+      end
+      go .draw
+    end
+    .draw:
+    render
+  end
+endf
+
+function on.mouse
+  locals r
+  if mouse.event='c'
+    . r0=&close.i.x
+    if.select r0
+      exit
+    end
+    if scene=SCENE.TITLE
+      reset.game
+      . scene=SCENE.PLAY
+      go .draw
+    end
+    if scene=SCENE.PLAY
+      if.select puzzle.box
+	get.select.xy
+	get r=get.piece.rotate \
+	 select.x, select.y
+	. r++
+	set.piece.rotate \
+	 select.x, select.y, r
+	go .draw
+      end
+    end
+    if scene=SCENE.SOLVED
+      reset.game
+      . scene=SCENE.TITLE
+      go .draw
+    end
+    .draw:
+    render
+  end
+endf
